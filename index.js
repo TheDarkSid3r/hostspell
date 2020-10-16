@@ -1,3 +1,5 @@
+var currentAudio = false;
+
 var spell = (word, host) => {
     var letterPaths = word
         .split("")
@@ -19,10 +21,13 @@ var spell = (word, host) => {
         })
         .then((output) => {
             Swal.close();
-            new Howl({
+            if (currentAudio) currentAudio.stop();
+            currentAudio = new Howl({
                 src: [output.url],
                 format: ["mp3"],
-                autoplay: true
+                autoplay: true,
+                onplay: () => $(".stop-audio").show(),
+                onend: () => $(".stop-audio").hide()
             });
             audio.download(output.blob, "".concat(host, "_", word.replace(/ /g, "_")));
         })
@@ -63,5 +68,9 @@ $(() => {
             allowEnterKey: false
         });
         spell(val, $(".host-select").val());
+    });
+    $(".stop-audio").hide().on("click", () => {
+        if (currentAudio) currentAudio.stop();
+        $(".stop-audio").hide();
     });
 });
