@@ -44,7 +44,7 @@ $(() => {
         );
     });
     $(".submit").on("click", () => {
-        var val = $(".word-input").val().trim().substring(0, 40).toUpperCase().replace(/[^A-Z]/g, "");
+        var val = $(".word-input").val().trim().toUpperCase().replace(/[^A-Z]/g, "").substring(0, 40);
         if (!val) {
             Swal.fire({
                 icon: "error",
