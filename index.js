@@ -2,6 +2,7 @@ var spell = (word, host) => {
     var letterPaths = word
         .split("")
         .map((l) => {
+            if (l == " ") return "audio/space.wav";
             var n = l.toLowerCase();
             if (host == "quip") n = "".concat(l.toUpperCase(), Math.floor(Math.random() * 3) + 1);
             return "".concat("audio/", host, "/", n, ".wav");
@@ -44,7 +45,7 @@ $(() => {
         );
     });
     $(".submit").on("click", () => {
-        var val = $(".word-input").val().trim().toUpperCase().replace(/[^A-Z]/g, "").substring(0, 40);
+        var val = $(".word-input").val().trim().toUpperCase().replace(/[^A-Z ]/g, "").substring(0, 40);
         if (!val) {
             Swal.fire({
                 icon: "error",
