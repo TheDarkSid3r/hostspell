@@ -24,7 +24,7 @@ var spell = (word, host) => {
                 format: ["mp3"],
                 autoplay: true
             });
-            audio.download(output.blob, "".concat(host, "_", word));
+            audio.download(output.blob, "".concat(host, "_", word.replace(/ /g, "_")));
         })
         .catch((error) => {
             console.log(error);
