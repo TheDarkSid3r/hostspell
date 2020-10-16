@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    color: #000;
+}
+
+* {
+    font-family: sans-serif;
+    line-height: 100%;
+}
+
+.wrapper {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 500px;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.wrapper * {
+    font-size: 22px;
+}
+
+.label {
+    padding: 5px 0;
+}
+
+.break {
+    padding: 10px 0;
+}
+
+.host-select, .word-input {
+    width: 350px;
+    max-width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.word-input {
+    text-transform: uppercase;
+}
+
+.word-input::placeholder {
+    text-transform: none;
+}
+
+.submit {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+    padding: 5px 10px;
+    background-color: #000;
+    color: #fff;
+    outline: none;
+}
