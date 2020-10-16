@@ -47,7 +47,7 @@ body {
     text-transform: none;
 }
 
-.submit {
+.button {
     position: relative;
     box-sizing: border-box;
     display: inline-block;
@@ -57,4 +57,5 @@ body {
     background-color: #000;
     color: #fff;
     outline: none;
+    margin: 2px 0;
 }

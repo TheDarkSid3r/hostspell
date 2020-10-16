@@ -1,6 +1,6 @@
 var currentAudio = false;
 
-var spell = (word, host) => {
+var spell = (word, host, callback) => {
     var letterPaths = word
         .split("")
         .map((l) => {
@@ -20,16 +20,19 @@ var spell = (word, host) => {
             return audio.export(merged, "audio/mp3");
         })
         .then((output) => {
-            Swal.close();
+            if (!callback) Swal.close();
             if (currentAudio) currentAudio.stop();
-            currentAudio = new Howl({
+            $(".stop-audio").hide();
+            if (!callback) currentAudio = new Howl({
                 src: [output.url],
                 format: ["mp3"],
                 autoplay: true,
                 onplay: () => $(".stop-audio").show(),
                 onend: () => $(".stop-audio").hide()
             });
-            audio.download(output.blob, "".concat(host, "_", word.replace(/ /g, "_")));
+            var fn = "".concat(host, "_", word.replace(/ /g, "_"));
+            if (callback) callback(output.blob, fn);
+            else audio.download(output.blob, fn);
         })
         .catch((error) => {
             console.log(error);
@@ -68,6 +71,48 @@ $(() => {
             allowEnterKey: false
         });
         spell(val, $(".host-select").val());
+    });
+    $(".submit-all").on("click", () => {
+        var val = $(".word-input").val().trim().toUpperCase().replace(/[^A-Z ]/g, "").substring(0, 40);
+        if (!val) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                html: "You have to type something! (that includes letters)"
+            });
+            return;
+        }
+        Swal.fire({
+            icon: "info",
+            title: "Generating&hellip;",
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false
+        });
+        var zip = new JSZip();
+        var done = 0;
+        hosts.forEach((h) => {
+            spell(val, h.id, (b, f) => {
+                zip.file(f.concat(".mp3"), b);
+                done++;
+                if (done >= hosts.length) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Zipping files&hellip;",
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false
+                    });
+                    zip.generateAsync({ type: "blob" })
+                        .then((content) => {
+                            Swal.close();
+                            saveAs(content, "".concat("all_", val.replace(/ /g, "_"), ".zip"));
+                        });
+                }
+            });
+        });
     });
     $(".stop-audio").hide().on("click", () => {
         if (currentAudio) currentAudio.stop();
